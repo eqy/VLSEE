@@ -4,14 +4,17 @@ function [garbage_units] = get_sane(dounits, spiketimes, bestchannel, wavedir, s
     AV_TH = 350;    %Absolute Voltage High
     AV_TL = -350;   %Absolute Voltage Low
     
-    COFV_TH = 0.4;  %Coefficient of Variation Threshold Low
+    COFV_TH = 0.25;  %Coefficient of Variation Threshold Low
     if ispen==1
         WC_TL = 0;
     else
         WC_TL = 200;    %Wave Count Threshold Low
     end
     garbage_indicies = [];
-    cofv = [];
+    cofv = NaN(1,length(dounits));
+    vpp = NaN(1,length(dounits));
+    vmax = NaN(1,length(dounits));
+    vmin = NaN(1,length(dounits));
     parfor i=1:length(dounits)
         unit = dounits(i);
         if length(spiketimes{unit}) < WC_TL
@@ -38,7 +41,7 @@ function [garbage_units] = get_sane(dounits, spiketimes, bestchannel, wavedir, s
     garbage_indicies = [garbage_indicies find(cofv > COFV_TH)];
     
     garbage_units = dounits(garbage_indicies); 
-    garbage_units = [garbage_units simple_snr(dounits, bestchannel, wavedir, 3)]; %Add simple snr pruning to get_sane
+    garbage_units = [garbage_units simple_snr(dounits, bestchannel, wavedir, 4)]; %Add simple snr pruning to get_sane
    
     garbage_units = sort(unique(garbage_units));
 end

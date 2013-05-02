@@ -6,9 +6,10 @@
 \title{VLSEE: Very Large Scale Electrophysiology-Experimental}
 \author{}
 \date{}
-
 \begin{document}
 \maketitle
+
+\tableofcontents
 
 \section{Introduction}
 VLSEE is a collection of scripts used in and with a large scale spike sorting
@@ -16,10 +17,31 @@ process. A section is dedicated to each of the scripts detailing behavior
 and usage. [Deprecated] proceeds the titles of scripts that are no longer
 actively maintained or improved.
 
+\subsection{Note on \texttt{custom/}}
+Scripts in the \texttt{custom/} directory, such as
+\texttt{plot\_penultimate}, are modified versions of original core
+subroutines with either performance enhancements or changes needed to
+better run scripts in VLSEE.
+
 \section{\texttt{simple\_snr}}
 \texttt{simple\_snr} is a function that calculates the mean signal-to-noise
 ratio (SNR) and simply returns an array of units whose mean SNR falls below
 a given threshold.
+
+\subsection{Usage}
+Example:
+
+\texttt{badunits = simple\_snr(dounits, bestchannel, wavedir, TL)}
+\begin{center}
+\begin{tabular}{l r}
+Parameters&Meaning\\
+\texttt{dounits}&Vector of indices of units to do\\
+\texttt{bestchannel}&Vector of best channel for each unit\\
+\texttt{wavedir}&Path to waveforms files\\
+\texttt{TL}&Low SNR threshold (not in dB)
+
+\end{tabular}
+\end{center}
 
 \section{\texttt{get\_sane}}
 \texttt{get\_sane} is function that returns an array of indices of bad units
@@ -34,7 +56,7 @@ Peak-to-peak Voltage (V\ensuremath{_{pp}})&\ensuremath{60 \mu}V&\ensuremath{350 
 Absolute Voltage&\ensuremath{-350 \mu}V&\ensuremath{350 \mu}V\\
 Wave Count&200\footnote{This minimum is 0 if this function is run at the penultimate
 step}&\ensuremath{\infty}\\ 
-Coefficient of Variation (Magnitude)&0&0.4
+Coefficient of Variation (Magnitude)&0&0.25
 \end{longtable}
 \end{center}
 
@@ -55,10 +77,10 @@ simplify the process.
 Example: 
 
 \texttt{badunits = get\_sane(do\_units, spiketimes, bestchannel, wavedir, sampling\_rate, ispen)}
-Description of parameters:
 \begin{center}
 \begin{longtable}{l r}
-\texttt{do\_units}&The indicies of units to check\\
+Paramters&Meaning\\
+\texttt{do\_units}&The indices of units to check\\
 \texttt{spiketimes}&The cell array of spike times\\
 \texttt{wavedir}&The director where the waveforms are store\\
 \texttt{sampling\_rate}&The sampling frequency\footnote{currently unused}\\
@@ -66,9 +88,82 @@ Description of parameters:
 \end{longtable}
 \end{center}
 
+\section{\texttt{pca\_merge}}
+\texttt{pca\_merge} is a script that attempts to use MATLAB's Principal
+Component Analysis (\texttt{pca}) tool to guide an algorithm in merging units. 
+Two units are first compared by concatenating their waveform data and
+taking the z-scores of this data (to compensate for the fact that
+\texttt{pca} is not a scale-invariant process). Note that each column of
+the concatenated waveforms represents values of a given variable. The
+number of variables is determined by the number of sample points per
+unit. \texttt{pca} is then used to transform the data such that 
+the first few components or variables contain most of the information of
+the changes in the data. It is expected then, for two distinguishable
+units that plotting the first two components of the transformed data
+will yield two clusters in 2-D space. Currently \texttt{pca\_merge}
+considers the first three dimensions of the transformed data and takes
+the distance between the centers of the two clusters as the basis for
+merge decisions. 
 
+Additionally, \texttt{pca\_merge} performs the additional basic sanity
+check of only comparing units that share the same best channel.
+
+\subsubsection{Note on Z-score}
+Given a value of a variable \ensuremath{x}, the z-score of this value is
+defined as:
+\begin{equation}
+z =\frac{ x - \mu}{\sigma}
+\end{equation}
+where \ensuremath{\mu} is the mean of \ensuremath{x} and
+\ensuremath{\sigma} is the standard deviation of \ensuremath{x}.
+
+\subsection{Usage}
+
+Example:
+\texttt{samemeans = pca\_merge(dounits,bestchannel,wavedir)}
+\begin{center}
+\begin{tabular}{l r}
+Parameter&Meaning\\
+dounits&Vector of indices of units to do\\
+bestchannel&Vector of of best channels of units\\
+wavedir &Path to waveforms
+\end{tabular}
+\end{center}
+
+\section{[Deprecated] \texttt{density\_distance\_area\_merge.m}}
+\texttt{density\_disance\_area\_merge.m} was an experimental script
+that attempted to establish a criteria from the merging of two units
+based on the similarity of of the distribution of their interspike
+intervals (ISI)s. 
+Unfortunately, while this idea works well in theory, units that are
+``incomplete'' or ``immature,'' meaning that they do not have most of
+the waveforms supposed to be associated with them actually included,
+tend to have ISIs that deviate significantly from the ideal case. Or
+equivalently, that a unit is incomplete often has a significant impact
+on its ISI distribution, meaning that this idea works well only with
+units that have enough spike times such that the distribution is
+well-defined and will not change significantly with the addition of more
+spikes from a unit it should be merged with. To compare actual
+distributions, this script separated the ISI data into bins of
+predetermined size and performed a discrete summation of absolute value
+of the difference of the distributions of two units and compared the
+result to an empirically defined parameter.
 
 \section{[Deprecated] \texttt{quasi\_pdf\_merge}}
-
+\texttt{quasi\_pdf\_merge} was an experimental script that attempted to
+also use the distribution of the ISIs of two units as a merge criteria,
+but in addition to the problems encountered with
+\texttt{density\_distance\_area\_merge}, \texttt{quasi\_pdf\_merge}
+encounters additional problems. Namely, as this script relies on first
+fitting a distribution to the ISIs of a given unit, the validity of the
+comparison of the distribution is dependent not only on the number of
+spike times of the unit, but the ``goodness of fit.'' In practice, the
+``goodness of fit'' was usually not good enough to justify use of this
+function. Additionally, even with a ``good fit,'' it remains troublesome
+to identify a good metric for comparing different probability density
+functions. The approach of simply looking at the different in the
+parameters of some probability density function was used. Note that if
+two discrete probability distributions are to be compared, the approach
+of \texttt{density\_distance\_area\_merge} is probably better.
 
 \end{document}
