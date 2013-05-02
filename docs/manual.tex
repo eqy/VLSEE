@@ -1,0 +1,74 @@
+\documentclass{article}
+\usepackage{verbatim}
+\usepackage{longtable}
+\usepackage[margin=1.0in]{geometry}
+
+\title{VLSEE: Very Large Scale Electrophysiology-Experimental}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+VLSEE is a collection of scripts used in and with a large scale spike sorting
+process. A section is dedicated to each of the scripts detailing behavior
+and usage. [Deprecated] proceeds the titles of scripts that are no longer
+actively maintained or improved.
+
+\section{\texttt{simple\_snr}}
+\texttt{simple\_snr} is a function that calculates the mean signal-to-noise
+ratio (SNR) and simply returns an array of units whose mean SNR falls below
+a given threshold.
+
+\section{\texttt{get\_sane}}
+\texttt{get\_sane} is function that returns an array of indices of bad units
+based on some simple criteria. Note that bad units are considered to be those
+that fall \emph{outside} the valid range of these parameters. It should function
+as a basic sanity check before any sorting process to prevent garbage units
+from causing a ``garbage--in--garbage--out'' effect.
+\begin{center}
+\begin{longtable}{l c r}
+Value&Minimum&Maximum\\
+Peak-to-peak Voltage (V\ensuremath{_{pp}})&\ensuremath{60 \mu}V&\ensuremath{350 \mu}V\\
+Absolute Voltage&\ensuremath{-350 \mu}V&\ensuremath{350 \mu}V\\
+Wave Count&200\footnote{This minimum is 0 if this function is run at the penultimate
+step}&\ensuremath{\infty}\\ 
+Coefficient of Variation (Magnitude)&0&0.4
+\end{longtable}
+\end{center}
+
+\subsubsection{Coefficient of Variation}
+The calculation of this parameter is motivated by the observation that most
+units that are considered to be artifacts are very noisy around the peaks.
+Here, the mean of the lowest point of the unit is considered to be the peak
+and the coefficient of variation is defined as:
+\begin{equation}
+        c_v = \sigma/\mu
+\end{equation}
+were \ensuremath{\sigma} is the standard deviation of the minimum of the
+waveforms and \ensuremath{\mu} is the minimum of the mean waveform. The
+absolute value of the coefficient of variation is used in the function to
+simplify the process.
+
+\subsection{Usage}
+Example: 
+
+\texttt{badunits = get\_sane(do\_units, spiketimes, bestchannel, wavedir, sampling\_rate, ispen)}
+Description of parameters:
+\begin{center}
+\begin{longtable}{l r}
+\texttt{do\_units}&The indicies of units to check\\
+\texttt{spiketimes}&The cell array of spike times\\
+\texttt{wavedir}&The director where the waveforms are store\\
+\texttt{sampling\_rate}&The sampling frequency\footnote{currently unused}\\
+\texttt{ispen} (1=True, 0=False)&Whether this function is being run just after \texttt{get\_penultimate\_units}
+\end{longtable}
+\end{center}
+
+
+
+\section{[Deprecated] \texttt{quasi\_pdf\_merge}}
+
+
+\end{document}

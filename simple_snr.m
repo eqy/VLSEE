@@ -1,6 +1,5 @@
 %%%Simple implementation of signal to noise pruning
-function [garbage_units] = simple_snr(dounits, snr_bestchannel, snr_wavedir)
-    TL = 3;
+function [garbage_units] = simple_snr(dounits, snr_bestchannel, snr_wavedir, TL)
     dounits_len = length(dounits);
     snr = NaN(dounits_len,1);
     

@@ -9,8 +9,10 @@ load([timesdir 'penult_spiketimes.mat'])
 load([penultwavedir 'bestchannel.mat']);  %loads parameters file.
 
 % if dounits=='all';
-dounits=1:length(parameters.templates);
+%dounits=1:length(parameters.templates);
 % end
+
+dounits=1:length(spiketimes);
 
 close all
 scrsz=get(0,'ScreenSize');
@@ -36,8 +38,8 @@ parfor unitind=1:length(dounits);
         continue
     end
   
-    %figure(2);
-    figurehandle2 = figure('Visible','off');
+    figure(2);
+    %figurehandle2 = figure('Visible','off');
     hold off
     subplot(1,2,1)   %plot all waveforms    
     
@@ -102,7 +104,8 @@ parfor unitind=1:length(dounits);
     xlabel(['time (ms)'],'FontSize',8) 
     ylabel(['amplitude (\muV)'],'FontSize',8)
     
-    saveas(figurehandle2,[penultunitsJPGdir 'unit' num2str(unit) '.jpg' ]  ,'jpg')
+    print(figure(2), [penultunitsJPGdir 'unit' num2str(unit) '.jpg' ], '-djpeg', '-r300');
+    %saveas(figurehandle2,[penultunitsJPGdir 'unit' num2str(unit) '.jpg' ]  ,'jpg')
    
     hold off
     close all

@@ -38,7 +38,7 @@ function [garbage_units] = get_sane(dounits, spiketimes, bestchannel, wavedir, s
     garbage_indicies = [garbage_indicies find(cofv > COFV_TH)];
     
     garbage_units = dounits(garbage_indicies); 
-    garbage_units = [garbage_units simple_snr(dounits, bestchannel, wavedir)]; %Add simple snr pruning to get_sane
+    garbage_units = [garbage_units simple_snr(dounits, bestchannel, wavedir, 3)]; %Add simple snr pruning to get_sane
    
     garbage_units = sort(unique(garbage_units));
 end
