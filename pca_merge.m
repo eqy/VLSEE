@@ -1,6 +1,6 @@
 function [merges] = pca_merge(dounits, pca_bestchannel, pca_wavedir)
     PCA_TH = 5;
-    PCT_DIFF_TH = 0.30;                   %Vmax and Vmin percentage difference threshold 
+    PCT_DIFF_TH = 0.25;                   %Vmax and Vmin percentage difference threshold 
     dounits_len = length(dounits);
     distances = NaN(length(dounits));
     vmax_pctdiff = NaN(length(dounits));

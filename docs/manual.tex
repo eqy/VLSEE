@@ -23,6 +23,14 @@ Scripts in the \texttt{custom/} directory, such as
 subroutines with either performance enhancements or changes needed to
 better run scripts in VLSEE.
 
+\subsection{Note on parameters}
+Many routines have additional parameters not passed to them as
+arguments. This is in an attempt to simplify operation for users--though
+``power'' users are free to edit ``hidden'' parameters defined within
+functions. Note that the values of these parameters are constantly
+subject to refinement as the functions are further tested with newer
+datasets. 
+
 \section{\texttt{simple\_snr}}
 \texttt{simple\_snr} is a function that calculates the mean signal-to-noise
 ratio (SNR) and simply returns an array of units whose mean SNR falls below
@@ -60,7 +68,7 @@ Coefficient of Variation (Magnitude)&0&0.25
 \end{longtable}
 \end{center}
 
-\subsubsection{Coefficient of Variation}
+\subsubsection{Note on Coefficient of Variation}
 The calculation of this parameter is motivated by the observation that most
 units that are considered to be artifacts are very noisy around the peaks.
 Here, the mean of the lowest point of the unit is considered to be the peak
@@ -130,7 +138,18 @@ wavedir &Path to waveforms
 \end{tabular}
 \end{center}
 
-\section{[Deprecated] \texttt{density\_distance\_area\_merge.m}}
+\section{\texttt{custom/plot\_penultimate}}
+This version of \texttt{plot\_penultimate} contains several changes to
+the version in ``core subroutines.'' \texttt{plot\_penultimate} has
+currently been unused in recent iterations of VLSE, but it remains
+important in understanding problems during the
+\texttt{get\_final\_units} process. One of the reasons that the old
+version of this script was unused was that it takes an excessively long
+amount of time to plot the number of units (on the order of
+\ensuremath{10^3} typically present after the
+\texttt{get\_penultimate\_units} process. 
+
+\section{[Deprecated] \texttt{density\_distance\_area\_merge}}
 \texttt{density\_disance\_area\_merge.m} was an experimental script
 that attempted to establish a criteria from the merging of two units
 based on the similarity of of the distribution of their interspike
@@ -165,5 +184,16 @@ functions. The approach of simply looking at the different in the
 parameters of some probability density function was used. Note that if
 two discrete probability distributions are to be compared, the approach
 of \texttt{density\_distance\_area\_merge} is probably better.
+
+\section{[Deprecated] \texttt{visualize\_quasi\_pdf}}
+\texttt{visualize\_quasi\_pdf} is a script that attempts to fit various
+probability distributions to the ISI distribution. Distributions are
+plotted with a histogram of the ISI.
+
+\section{[Deprecated] \texttt{principal\_component\_example}}
+\texttt{principal\_component\_example} is a demo program that creates
+visualizations of the process used in \texttt{pca\_merge}. It plots the
+first two components of the transformed data, allowing for the
+separation (or lack thereof) of clusters of waveforms to be seen.
 
 \end{document}

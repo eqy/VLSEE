@@ -4,7 +4,7 @@ function [garbage_units] = get_sane(dounits, spiketimes, bestchannel, wavedir, s
     AV_TH = 350;    %Absolute Voltage High
     AV_TL = -350;   %Absolute Voltage Low
     
-    COFV_TH = 0.25;  %Coefficient of Variation Threshold Low
+    COFV_TH = 0.20;  %Coefficient of Variation Threshold Low
     if ispen==1
         WC_TL = 0;
     else
@@ -15,7 +15,7 @@ function [garbage_units] = get_sane(dounits, spiketimes, bestchannel, wavedir, s
     vpp = NaN(1,length(dounits));
     vmax = NaN(1,length(dounits));
     vmin = NaN(1,length(dounits));
-    parfor i=1:length(dounits)
+    for i=1:length(dounits)
         unit = dounits(i);
         if length(spiketimes{unit}) < WC_TL
             garbage_indicies = [garbage_indicies i];

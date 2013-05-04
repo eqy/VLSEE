@@ -1,12 +1,16 @@
 \contentsline {section}{\numberline {1}Introduction}{1}
 \contentsline {subsection}{\numberline {1.1}Note on \texttt {custom/}}{1}
-\contentsline {section}{\numberline {2}\texttt {simple\_snr}}{1}
-\contentsline {subsection}{\numberline {2.1}Usage}{1}
+\contentsline {subsection}{\numberline {1.2}Note on parameters}{1}
+\contentsline {section}{\numberline {2}\texttt {simple\_snr}}{2}
+\contentsline {subsection}{\numberline {2.1}Usage}{2}
 \contentsline {section}{\numberline {3}\texttt {get\_sane}}{2}
-\contentsline {subsubsection}{\numberline {3.0.1}Coefficient of Variation}{2}
+\contentsline {subsubsection}{\numberline {3.0.1}Note on Coefficient of Variation}{2}
 \contentsline {subsection}{\numberline {3.1}Usage}{2}
-\contentsline {section}{\numberline {4}\texttt {pca\_merge}}{2}
+\contentsline {section}{\numberline {4}\texttt {pca\_merge}}{3}
 \contentsline {subsubsection}{\numberline {4.0.1}Note on Z-score}{3}
 \contentsline {subsection}{\numberline {4.1}Usage}{3}
-\contentsline {section}{\numberline {5}[Deprecated] \texttt {density\_distance\_area\_merge.m}}{3}
-\contentsline {section}{\numberline {6}[Deprecated] \texttt {quasi\_pdf\_merge}}{3}
+\contentsline {section}{\numberline {5}\texttt {custom/plot\_penultimate}}{3}
+\contentsline {section}{\numberline {6}[Deprecated] \texttt {density\_distance\_area\_merge}}{3}
+\contentsline {section}{\numberline {7}[Deprecated] \texttt {quasi\_pdf\_merge}}{4}
+\contentsline {section}{\numberline {8}[Deprecated] \texttt {visualize\_quasi\_pdf}}{4}
+\contentsline {section}{\numberline {9}[Deprecated] \texttt {principal\_component\_example}}{4}
