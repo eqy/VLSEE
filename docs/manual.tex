@@ -114,7 +114,11 @@ the distance between the centers of the two clusters as the basis for
 merge decisions. 
 
 Additionally, \texttt{pca\_merge} performs the additional basic sanity
-check of only comparing units that share the same best channel.
+checks of only comparing units that share the same best channel and
+units that have max voltages and min voltages within a certain
+tolerance. Both of these additional sanity checks are pending
+removal--to simplify the process.
+
 
 \subsubsection{Note on Z-score}
 Given a value of a variable \ensuremath{x}, the z-score of this value is
