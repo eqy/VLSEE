@@ -12,6 +12,8 @@ function [garbage_units] = get_sane(dounits, spiketimes, bestchannel, ...
     %noisy around the minimum, lower values discard more units
     COFV_MIN_TH = 0.22;  %Coefficient of Variation Threshold High
     COFV_MAX_TH = 0.25;  %Currently UNUSED 
+    %Quasi-derivative test, used to eliminate excessively "flat" spikes
+    DIFF_MAX_TL = 25;
     
     %Set the minimum number of spikes allowed based on whether
     %get_final_units has finished
@@ -65,6 +67,7 @@ function [garbage_units] = get_sane(dounits, spiketimes, bestchannel, ...
     garbage_indicies = [garbage_indicies find(vpp < VPP_TL)];
     garbage_indicies = [garbage_indicies find(vmax > AV_TH)];
     garbage_indicies = [garbage_indicies find(vmin < AV_TL)];
+    garbage_indicies = [garbage_indicies find(diff_max < DIFF_MAX_TL)];
     cofv_min_fail = find(cofv_min > COFV_MIN_TH);
     cofv_max_fail = find(cofv_max > COFV_MAX_TH);
     %garbage_indicies = [garbage_indicies cofv_max_fail];

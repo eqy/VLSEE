@@ -152,106 +152,111 @@ end
 
 disp(['checking for units to merge.'])
 samemeans=[];
-tic
-[samemeans, debug] = pca_merge(dounits,bestchannel,penultwavedir);
-toc
-disp(['pca_merge decided on ' num2str(length(samemeans)) ' merges'])
-% for i=1:length(dounits);
-%     uniti=dounits(i);
-%     
-%     stimesi=spiketimes{uniti};
-%             
-%     meanwavei=meanwaves{uniti}{1};
-%     
-%     isii=diff(stimesi);
-%     isii=isii(find(isii<=isirange));
-%     if length(isii)>0
-%     histisii=100*histc(isii,isiplottime)/length(isii);
-%     histisii=smooth(histisii,20);
-%     peakisitimei=isiplottime(find(histisii==max(histisii)));
-%     peakisitimei=peakisitimei(1);
-%     else peakisitimej=100;
-%     end
-%     
-%     for j=2:length(dounits);
-%       unitj=dounits(j);
-%       if i>=j | parameters.shaft{uniti}~=parameters.shaft{unitj}
-%          continue
-%       end
-%         
-%       stimesj=spiketimes{unitj}; 
-%       
-%       isij=diff(stimesj);
-%       isij=isij(find(isij<isirange));
-%       if length(isij)>0
-%       histisij=100*histc(isij,isiplottime)/length(isij);
-%       histisij=smooth(histisij,20);
-%       peakisitimej=isiplottime(find(histisij==max(histisij)));
-%       peakisitimej=peakisitimej(1);
-%       else peakisitimej=100;
-%       end
-%       
-%       combinedrate=histc(sort([stimesi stimesj]),0:100:maxtime)/100; %added 1/3/13 for new merge correction factor
-%       sdcombinedrate=std(combinedrate);
-%      
-%       timeratio=length(stimesi)/length(stimesj);
-%       if timeratio>=1  %equalize # of times.
-%       newstimesi=stimesi(1:length(stimesj));
-%       newstimesj=stimesj;
-%       else
-%       newstimesi=stimesi;
-%       newstimesj=stimesj(1:length(stimesi));
-%       end
-%       difftimes=abs(newstimesj-newstimesi);                                        
-%              
-%       for k=1:length(jittersamples);
-%       jitterk=jittersamples(k);
-%    
-%         meanwavej=meanwaves{unitj}{k};
-%         
-%         diffwaves=abs(meanwavei-meanwavej);     %THIS IS THE SLOWEST LINE IN LOOP. use only ~1 to 3 points instead of entire waveform; implemented on 7/12/11 to deal with Dec6b data.
-%            
-%         minsd=min([sdwaves{uniti}{1}; sdwaves{unitj}{k}]);   %default minsd=min([sdwaves{uniti}{1}; sdwaves{unitj}{k}]);
-% 
-%         mindiff=minsd;       
-%                   
-% %       mergeSDfactor=origmergeSDfactor; %no fudge factor (27/2/13)
-% 
-%         if bestchannel{uniti}==bestchannel{unitj}     %added 28/2/13
-%         fudgefactor=(range(meanwavei)+range(meanwavej))/(abs(range(meanwavei)-range(meanwavej))+basevoltagerange); 
-%             if sdcombinedrate<sqrt((sdrate{uniti})^2+(sdrate{uniti})^2)  %multiplies a bonus factor if the S.D. of the combined firing rate is < than that of the individual rates.
-%                 fudgefactor=goodratebonus*fudgefactor;
-%             end
-% 
-% %             if abs(peakisitimei-peakisitimej)<maxisidiff & peakisitimei<2*isirange & peakisitimej<2*isirange;
-% %                 fudgefactor=(range(meanwavei)+range(meanwavej))/(abs(range(meanwavei)-range(meanwavej))+basevoltagerange); 
-% %             end
-% 
-%         else fudgefactor=-origmergeSDfactor+0.2;
-%         end
-%         mergeSDfactor=origmergeSDfactor+fudgefactor;
-%         
-%         nomatches=length(find(diffwaves>mergeSDfactor*mindiff));
-%         
-%         if sum(nomatches)>0    %if it appears there is no match between uniti and unitj, then try a second test to see if they match
-%         test2=length(find(diffwaves>(2*mergeSDfactor)*mindiff));  %second test relaxes merge criteria by a factor of two, but requires that the units essentially be identical.
-%         diffcombinedtimes=diff(sort([stimesi stimesj]));
-%         fractionreject=length(find(diffcombinedtimes<=rejecttime/samplingrate))/length(diffcombinedtimes);
-%             if sum(test2)<=0 & fractionreject>0.32   %default=0.68
-%             nomatches=0; 
-%             end
-%         end
-%         
-%         if sum(nomatches)<=0     
-%             samemeans=[samemeans; uniti unitj];   %the left and right columns specify indices to be merged. 
-%             continue   %continue is for the jittersamples loop         
-%        end
-%         
-%       end
-%       
-%     end
-%     
-% end
+
+if do_pca_merge == 'n'
+    disp('not using pca_merge')
+    for i=1:length(dounits);
+        uniti=dounits(i);
+
+        stimesi=spiketimes{uniti};
+
+        meanwavei=meanwaves{uniti}{1};
+
+        isii=diff(stimesi);
+        isii=isii(find(isii<=isirange));
+        if length(isii)>0
+        histisii=100*histc(isii,isiplottime)/length(isii);
+        histisii=smooth(histisii,20);
+        peakisitimei=isiplottime(find(histisii==max(histisii)));
+        peakisitimei=peakisitimei(1);
+        else peakisitimej=100;
+        end
+
+        for j=2:length(dounits);
+          unitj=dounits(j);
+          if i>=j | parameters.shaft{uniti}~=parameters.shaft{unitj}
+             continue
+          end
+
+          stimesj=spiketimes{unitj}; 
+
+          isij=diff(stimesj);
+          isij=isij(find(isij<isirange));
+          if length(isij)>0
+          histisij=100*histc(isij,isiplottime)/length(isij);
+          histisij=smooth(histisij,20);
+          peakisitimej=isiplottime(find(histisij==max(histisij)));
+          peakisitimej=peakisitimej(1);
+          else peakisitimej=100;
+          end
+
+          combinedrate=histc(sort([stimesi stimesj]),0:100:maxtime)/100; %added 1/3/13 for new merge correction factor
+          sdcombinedrate=std(combinedrate);
+
+          timeratio=length(stimesi)/length(stimesj);
+          if timeratio>=1  %equalize # of times.
+          newstimesi=stimesi(1:length(stimesj));
+          newstimesj=stimesj;
+          else
+          newstimesi=stimesi;
+          newstimesj=stimesj(1:length(stimesi));
+          end
+          difftimes=abs(newstimesj-newstimesi);                                        
+
+          for k=1:length(jittersamples);
+          jitterk=jittersamples(k);
+
+            meanwavej=meanwaves{unitj}{k};
+
+            diffwaves=abs(meanwavei-meanwavej);     %THIS IS THE SLOWEST LINE IN LOOP. use only ~1 to 3 points instead of entire waveform; implemented on 7/12/11 to deal with Dec6b data.
+
+            minsd=min([sdwaves{uniti}{1}; sdwaves{unitj}{k}]);   %default minsd=min([sdwaves{uniti}{1}; sdwaves{unitj}{k}]);
+
+            mindiff=minsd;       
+
+    %       mergeSDfactor=origmergeSDfactor; %no fudge factor (27/2/13)
+
+            if bestchannel{uniti}==bestchannel{unitj}     %added 28/2/13
+            fudgefactor=(range(meanwavei)+range(meanwavej))/(abs(range(meanwavei)-range(meanwavej))+basevoltagerange); 
+                if sdcombinedrate<sqrt((sdrate{uniti})^2+(sdrate{uniti})^2)  %multiplies a bonus factor if the S.D. of the combined firing rate is < than that of the individual rates.
+                    fudgefactor=goodratebonus*fudgefactor;
+                end
+
+    %             if abs(peakisitimei-peakisitimej)<maxisidiff & peakisitimei<2*isirange & peakisitimej<2*isirange;
+    %                 fudgefactor=(range(meanwavei)+range(meanwavej))/(abs(range(meanwavei)-range(meanwavej))+basevoltagerange); 
+    %             end
+
+            else fudgefactor=-origmergeSDfactor+0.2;
+            end
+            mergeSDfactor=origmergeSDfactor+fudgefactor;
+
+            nomatches=length(find(diffwaves>mergeSDfactor*mindiff));
+
+            if sum(nomatches)>0    %if it appears there is no match between uniti and unitj, then try a second test to see if they match
+            test2=length(find(diffwaves>(2*mergeSDfactor)*mindiff));  %second test relaxes merge criteria by a factor of two, but requires that the units essentially be identical.
+            diffcombinedtimes=diff(sort([stimesi stimesj]));
+            fractionreject=length(find(diffcombinedtimes<=rejecttime/samplingrate))/length(diffcombinedtimes);
+                if sum(test2)<=0 & fractionreject>0.32   %default=0.68
+                nomatches=0; 
+                end
+            end
+
+            if sum(nomatches)<=0     
+                samemeans=[samemeans; uniti unitj];   %the left and right columns specify indices to be merged. 
+                continue   %continue is for the jittersamples loop         
+           end
+
+          end
+
+        end
+
+    end
+else
+    tic
+    [samemeans, debug] = pca_merge(dounits,bestchannel,penultwavedir);
+    toc
+    disp(['pca_merge decided on ' num2str(length(samemeans)) ' merges'])
+end
   
 
 newtimes=[]; newbaretimes=[]; newjittertimes=[]; newshaft=[];

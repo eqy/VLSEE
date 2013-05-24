@@ -3,8 +3,11 @@ function [merges, debug] = pca_merge(dounits, pca_bestchannel, pca_wavedir)
     %error
     PCA_TH = 5;
     %Vmax and Vmin percentage difference threshold
-    PCT_DIFF_TH = 0.25;                    
+    PCT_DIFF_TH = 0.25;
+    
+    MERGE_VPP_TL = 65;
     dounits_len = length(dounits);
+    
     %Prealloction of 
     distances = NaN(length(dounits));
     vmax_pctdiff = NaN(length(dounits));
@@ -27,7 +30,7 @@ function [merges, debug] = pca_merge(dounits, pca_bestchannel, pca_wavedir)
             if unit_j_label <= unit_i_label
                continue;
             end       
-
+            
             wave_j_data = load([pca_wavedir 'waveforms_i' num2str(1) ...
                 '_cl' num2str(unit_j_label) '.mat']);
             bestchan_j = pca_bestchannel{unit_j_label};
@@ -49,7 +52,12 @@ function [merges, debug] = pca_merge(dounits, pca_bestchannel, pca_wavedir)
             %%%
             %Concatenate the matricies, and take their z-scores to render
             %the pca process scale-invariant
-            waves_i_j = [waves_i ; waves_j];
+            waves_i_j = [waves_i; waves_j];
+            %%%Check if the merged waveform has a high enough Vpp
+            if (max(mean(waves_i_j)) - min(mean(waves_i_j)) < MERGE_VPP_TL)
+                continue;
+            end
+            
             standard_waves_i_j = zscore(waves_i_j);
             [c,s] = pca(standard_waves_i_j);
             [n_j, ~] = size(waves_j);
