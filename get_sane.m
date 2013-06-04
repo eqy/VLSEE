@@ -46,7 +46,12 @@ function [garbage_units] = get_sane(dounits, spiketimes, bestchannel, ...
             '_cl' num2str(unit) '.mat']);
         channel = bestchannel(unit);
         best_channel_waves = current.waveforms{cell2mat(channel)};
-        mean_waveform =  mean(best_channel_waves);
+        [n_waves, ~] = size(best_channel_waves);
+        if(n_waves > 1)
+            mean_waveform = mean(best_channel_waves);
+        else
+            mean_waveform = best_channel_waves;
+        end
         vmax(i) = max(mean_waveform);
         vmin(i) = min(mean_waveform);
         vpp(i) = max(mean_waveform) - min(mean_waveform);
@@ -58,7 +63,6 @@ function [garbage_units] = get_sane(dounits, spiketimes, bestchannel, ...
         max_index = find(mean_waveform == vmax(i));
         all_max = best_channel_waves(:,max_index);
         cofv_max(i) = abs(std(all_max)/mean(all_max));
-        
         diff_max(i) = max(abs(diff(mean_waveform)));    
     end
     %Concatenate all the indicies that fail the thresholds, then removed

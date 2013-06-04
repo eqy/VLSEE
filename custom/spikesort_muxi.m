@@ -1,7 +1,8 @@
 %Created May 10 2011, updated January 2013.  This program is for analysis of electrophysiological, behavioral, and stimulus data.  
 
 probetype='probe3D_2x64E_1';                    %probe type.  see get_probegeometry for definitions.  
-badchannels=[73 93 124];              %ok to leave empty. specifies the faulty channels on the probe.
+badchannels=[3 41 73 75 84 88 119 122]; %bad channels for Mouse 48
+%badchannels=[73 93 124];              %ok to leave empty. specifies the faulty channels on the probe.
 backgroundchans1=['all'];            %default=['all']. can leave empty or write numeric list. The channels in the current set are not used in backgroundchans.  badchannels are removed from this list.
 laser_artifact_removal='n';
 
@@ -26,9 +27,10 @@ goodratebonus=1;                  %default=2. used in a merging correction facto
 maxisidiff=0.005;
 minburstfraction=0.05; 
 maxburstisi=0.08;                   %default=0.08 sec. used in get_final_units.
+do_get_sane = 'n';                  %use get_sane? 
 do_pca_merge = 'n';                 %use old merge routine or pca_merge?
 
-runAutoUnitQuality='s';             %default is 's' (semi-automatic). 'a'=automatic. 'n'=no. 'd'=demo mode that shows results for each unit.
+runAutoUnitQuality='a';             %default is 's' (semi-automatic). 'a'=automatic. 'n'=no. 'd'=demo mode that shows results for each unit.
 final_minspikesperunit=200;         %default=200; used in get_final_units & auto_unit_quality. minimum number of spikes required for a unit to be scored >3.
 autoVoltageCutoff=65;               %default=65 uV; used in auto_unit_quality.  minimum voltage required for a unit to be scored >3.
 
@@ -61,6 +63,7 @@ combine_channelsets                 %if template making and matching tasks were 
 
 get_final_units                     %discards units if they fail SD test, and merges similar units based on SD of waveforms across all channels. bad units are called 'badunits', and merged units are in 'mergeclusts'
   
+pause;
 plot_summary_muxi                   %plots waveforms, isi, psth for each unit and stores figures in \units\. 
 
 get_unitquality                     %assigns score of 1, 2, or 3 to each unit. 

@@ -130,18 +130,23 @@ end
 
 
 badunits=unique(badunits);
-tic
-badunits2=get_sane(dounits,spiketimes,bestchannel,penultwavedir,25000,1);
-toc
-old_len = length(badunits);
-badunits=[badunits badunits2];
-badunits=unique(badunits);
-new_len = length(badunits);
-
+if do_get_sane == 'y'
+    display('using get_sane')
+    tic
+    badunits2=get_sane(dounits,spiketimes,bestchannel,penultwavedir,25000,1);
+    toc 
+    display('during get_sane')
+    old_len = length(badunits);
+    badunits=[badunits badunits2];
+    badunits=unique(badunits);
+    new_len = length(badunits);
+    disp([num2str(new_len-old_len) ' units were uniquely identified as bad by get_sane'])
+else
+    display('not using get_sane')
+end
 
 dounits=setdiff(dounits,badunits);
 disp(['discarded ' num2str(length(badunits)) ' units which failed quality checks, ' num2str(length(dounits)) ' units remaining.'])
-disp([num2str(new_len-old_len) ' units were uniquely identified as bad by get_sane'])
 
 sdrate=[];  %added 1/3/13
 for i=1:length(dounits);
@@ -252,9 +257,11 @@ if do_pca_merge == 'n'
 
     end
 else
+    disp(['using pca_merge'])
     tic
     [samemeans, debug] = pca_merge(dounits,bestchannel,penultwavedir);
     toc
+    disp(['during pca_merge for ' num2str(length(dounits)) ' units'])
     disp(['pca_merge decided on ' num2str(length(samemeans)) ' merges'])
 end
   
