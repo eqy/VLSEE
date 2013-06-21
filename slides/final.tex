@@ -1,4 +1,5 @@
 \documentclass{beamer}
+\usetheme{Boadilla}
 \usepackage{graphicx}
 \usepackage{ulem}
 
@@ -238,8 +239,67 @@ threshold, discard it (it doesn't actually have a spike)
 threshold, discard it
          \end{enumerate}
     \end{frame}
-\end{document}
 
-    \begin{frame}{Performance with and without \texttt{get\_sane} (Mouse 48)}
-
+    \begin{frame}{Performance with and without \texttt{get\_sane} (Mouse 48)
+Evaluated Manually}
+        \begin{tabular}{l c c c r}
+        \pause
+        Process&\texttt{get\_sane},\texttt{pca}&\texttt{get\_sane},orig&orig&orig\footnote{updated
+merge process, not the copy of code I was working with}\\
+        \pause
+        Qual. 1&43&25&20&38\\
+        Qual. 2&59&40&38&62\\
+        Qual. 3&119&57&128&227\\
+        Total&221&122&186&327
+        \end{tabular}
     \end{frame}
+
+    \begin{frame}{Performance with and without \texttt{get\_sane} (Mouse 48)
+Evaluated Automatically}
+        \begin{tabular}{l c c c c r}
+        \pause
+        Process&\texttt{get\_sane},\texttt{pca}&\texttt{pca}&\texttt{get\_sane},orig&orig&orig
+\footnote{updated
+merge process, not the copy of code I was working with}\\
+        \pause
+        Qual. 1&47&45&27&25&30\\
+        Qual. 2&67&75&38&28&64\\
+        Qual. 3&107&239&57&133&233\\
+        Total&221&359&122&186&327\\
+        \end{tabular}
+    \end{frame} 
+
+    \begin{frame}{Further Ideas}
+    \begin{itemize}
+        \pause
+        \item Use ``fashionable'' clustering techniques''
+        \begin{itemize}
+            \item similarity-graphs
+            \item \ensuremath{k}-means
+            \item spectral clustering
+        \end{itemize}
+        \pause
+        \item Unit Maturity
+    \end{itemize}
+    \end{frame}
+        
+    \begin{frame}{Spike Sorting from Scratch, Some Lofty Principles}
+        \begin{itemize}
+            \pause
+            \item Reduce the number of parameters
+            \pause
+            \item Build an iterative test suite for each ``subroutine,'' with
+test cases and clearly defined expected output
+            \pause
+            \item Design with parallelism in mind, consider exploring MATLAB's
+cluster functionality or UCLA's Hoffman2
+            \pause
+            \item  Use classes! Or in the very least, structs and fucntions, to organize data
+into predictable pieces
+            \pause
+            \item Consider scope and variable names carefully--avoid making
+everything globally accessible and naming conflicts and know what the state of
+each variable should be at every step
+        \end{itemize}
+    \end{frame}
+\end{document}
