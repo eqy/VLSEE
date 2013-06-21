@@ -2,8 +2,9 @@
 \usetheme{Boadilla}
 \usepackage{graphicx}
 \usepackage{ulem}
+\usepackage{color}
 
-\title{Lessons Learned in Spike Sorting: The \ensuremath{n=1} Perspective}
+\title[n=1 Spike Sorting]{Lessons Learned in Spike Sorting: The \ensuremath{n=1} Perspective}
 \author{Eddie Yan}
 \date{June 21, 2013}
 
@@ -172,6 +173,7 @@ current Euclidean-distance based merge process
                 \pause
                 \item Consider each PCA-transformed spike in
 \ensuremath{\mathbb{R}^3} space
+                \pause
                 \item Form a cluster of points corresponding to the spikes of that unit in
 \ensuremath{\mathbb{R}^3}
                 \pause
@@ -237,6 +239,9 @@ threshold, discard it (it doesn't actually have a spike)
             \pause
             \item If the peak-to-peak voltage of a unit is below a certain
 threshold, discard it
+            \pause
+            \item Take the coefficient of variation of the minimum of each unit:
+\ensuremath{\frac{\sigma}{\mu}} and discard this unit if it exceeds a certain threshold
          \end{enumerate}
     \end{frame}
 
@@ -269,6 +274,23 @@ merge process, not the copy of code I was working with}\\
         \end{tabular}
     \end{frame} 
 
+    \begin{frame}{How many units does \texttt{get\_sane} discard?}
+\texttt{get\_final} step are viable?
+        \pause
+        \begin{itemize}
+        \item The short answer is: very few.
+        \pause
+        \item On a typical dataset (Mouse 48),
+\textbf{\textcolor{red}{95}\%} - \textbf{\textcolor{red}{98}\%} units are
+discarded
+        \begin{itemize}
+            \item Why does \texttt{get\_sane} still produces a comparable number
+of units with this many being discarded? It does not overmerge bad units.
+        \end{itemize} 
+        \end{itemize}
+    \end{frame}
+ 
+
     \begin{frame}{Further Ideas}
     \begin{itemize}
         \pause
@@ -282,9 +304,14 @@ merge process, not the copy of code I was working with}\\
         \item Unit Maturity
     \end{itemize}
     \end{frame}
-        
+    
+       
     \begin{frame}{Spike Sorting from Scratch, Some Lofty Principles}
         \begin{itemize}
+            \pause 
+            \item Use version control e.g. \texttt{git}
+            \pause
+            \item Document!
             \pause
             \item Reduce the number of parameters
             \pause
