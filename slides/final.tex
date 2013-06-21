@@ -205,4 +205,41 @@ process
             \end{itemize}
         \end{itemize}
     \end{frame}
+    
+    \begin{frame}{A Toy Cluster}
+        \pause
+        \includegraphics[width=110mm]{images/cluster.png}
+    \end{frame}
+
+    \begin{frame}{\texttt{get\_sane}: An Exploration of Garbage Collection in
+Spike Sorting}
+        \begin{itemize}
+            \pause
+            \item The old merge process was somewhat tolerate of ``garbage
+units,'' because it formed ``mass graves,'' of bad units
+            \pause
+        \end{itemize}
+        \includegraphics[width=110mm]{images/unit1.jpg}
+    \end{frame}
+
+    \begin{frame}{\texttt{get\_sane}'s sanity checks}
+        \begin{enumerate}
+            \pause
+            \item If the peak-to-peak voltage of a unit is above a certain
+threshold, discard it
+            \pause
+            \item If the absolute maximum voltage of a unit is above a certain
+threshold, discard it 
+            \pause
+            \item If the maximum \texttt{diff()} of the unit is below a certain
+threshold, discard it (it doesn't actually have a spike)
+            \pause
+            \item If the peak-to-peak voltage of a unit is below a certain
+threshold, discard it
+         \end{enumerate}
+    \end{frame}
 \end{document}
+
+    \begin{frame}{Performance with and without \texttt{get\_sane} (Mouse 48)}
+
+    \end{frame}
